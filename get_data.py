@@ -16,5 +16,5 @@ for submission in reddit.subreddit('soccer').top('month',limit=1000):
         if comment.author_flair_text:
             authors[comment.author_flair_text].add(comment.author)
 
-with open('clubs_with_authors.pickle','w') as b:
-    b.dump(authors)
+with open('clubs_with_authors.pickle','wb') as b:
+    pickle.dump(authors,b, protocol = pickle.HIGHEST_PROTOCOL)
