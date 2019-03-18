@@ -44,7 +44,7 @@ def get_comments(author,author_with_club):
 def main():
     startTime = datetime.now()
     author_with_club = make_searchable_dict(clubs_with_authors)
-    for author in authors:
+    for author in authors[4372:]:
         get_comments(author,author_with_club)
     user_logger.info("Took {}".format(datetime.now()-startTime))
 if __name__ == "__main__":
