@@ -45,7 +45,10 @@ def main():
     startTime = datetime.now()
     author_with_club = make_searchable_dict(clubs_with_authors)
     for author in authors[4372:]:
-        get_comments(author,author_with_club)
+        try:
+            get_comments(author,author_with_club)
+        except:
+            user_logger.error("COULD NOT FIND THE ACCOUNT FOR USER {} WITH CLUB {}".format(author,author_with_club[author]))
     user_logger.info("Took {}".format(datetime.now()-startTime))
 if __name__ == "__main__":
     main()
