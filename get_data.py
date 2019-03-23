@@ -10,28 +10,21 @@ reddit = praw.Reddit(client_id='YpYx4r89UxeMag',
                      client_secret='7nLiowFm1BmpNxmHlvirrEe8Hj8',
                      user_agent='my user agent')
 
-def get_top_1000_month():
+def get_top_1000(authors,timefilter):
+    for submission in reddit.subreddit('soccer').top(timefilter,limit=1000):
+        for comment in submission.comments:
+            if isinstance(comment,MoreComments):
+                continue
+            if comment.author_flair_text:
+                authors[comment.author_flair_text].add(comment.author)
+    return authors
+def get_usernames():
     authors = defaultdict(set)
-    for submission in reddit.subreddit('soccer').top('month',limit=1000):
-        for comment in submission.comments:
-            if isinstance(comment,MoreComments):
-                continue
-            if comment.author_flair_text:
-                authors[comment.author_flair_text].add(comment.author)
+    month_users = get_top_1000(authors,'month')
+    extra_data = get_top_1000(month_users,'all')
     with open('clubs_with_authors.pickle','w') as b:
-        b.dump(authors)
+        b.dump(extra_data)
 
-def get_top_1000_all():
-    with open('clubs_with_authors.pickle','rb') as f:
-        authors = pickle.load(f)
-    for submission in reddit.subreddit('soccer').top('all',limit=1000):
-        for comment in submission.comments:
-            if isinstance(comment,MoreComments):
-                continue
-            if comment.author_flair_text:
-                authors[comment.author_flair_text].add(comment.author)
-    with open('clubs_with_authors.pickle','w') as b:
-        b.dump(authors)
 
 def clean_initial(authors):
     stripped_dict = defaultdict(set)
@@ -73,7 +66,7 @@ def get_all_authors(final_dict):
 
 
 def main():
-    get_top_1000_all()
+    get_usernames()
     # with open('clubs_with_authors.pickle','rb') as f:
     #     authors = pickle.load(f)
     # stripped_dict = clean_initial(authors)
