@@ -23,7 +23,7 @@ def get_usernames():
     month_users = get_top_1000(authors,'month')
     extra_data = get_top_1000(month_users,'all')
     with open('clubs_with_authors.pickle','wb') as b:
-        b.dump(extra_data)
+        pickle.dump(extra_data,b,protocol = pickle.HIGHEST_PROTOCOL)
 
 
 def clean_initial(authors):
@@ -78,7 +78,7 @@ def main():
     # with open('authors.pickle','wb') as b:
     #     pickle.dump(all_authors_sorted,b, protocol = pickle.HIGHEST_PROTOCOL)
 
-    create_folders(final_dict)
+    #create_folders(final_dict)
 
 if __name__ == "__main__":
     main()
