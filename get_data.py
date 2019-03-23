@@ -22,7 +22,7 @@ def get_usernames():
     authors = defaultdict(set)
     month_users = get_top_1000(authors,'month')
     extra_data = get_top_1000(month_users,'all')
-    with open('clubs_with_authors.pickle','w') as b:
+    with open('clubs_with_authors.pickle','wb') as b:
         b.dump(extra_data)
 
 
