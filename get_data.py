@@ -5,7 +5,6 @@ import pickle
 from praw.models import MoreComments
 from collections import defaultdict
 from operator import itemgetter
-import os
 
 reddit = praw.Reddit(client_id='os.environ.get(CLIENT_ID)',
                      client_secret='os.environ.get(CLIENT_SECRET)',
@@ -14,6 +13,18 @@ reddit = praw.Reddit(client_id='os.environ.get(CLIENT_ID)',
 def get_top_1000_month():
     authors = defaultdict(set)
     for submission in reddit.subreddit('soccer').top('month',limit=1000):
+        for comment in submission.comments:
+            if isinstance(comment,MoreComments):
+                continue
+            if comment.author_flair_text:
+                authors[comment.author_flair_text].add(comment.author)
+    with open('clubs_with_authors.pickle','w') as b:
+        b.dump(authors)
+
+def get_top_1000_all():
+    with open('clubs_with_authors.pickle','rb') as f:
+        authors = pickle.load(f)
+    for submission in reddit.subreddit('soccer').top('all',limit=1000):
         for comment in submission.comments:
             if isinstance(comment,MoreComments):
                 continue
@@ -62,11 +73,12 @@ def get_all_authors(final_dict):
 
 
 def main():
-    with open('clubs_with_authors.pickle','rb') as f:
-        authors = pickle.load(f)
-    stripped_dict = clean_initial(authors)
-    sorted_authors = count_initial(stripped_dict)
-    final_dict = create_final_dict(sorted_authors,stripped_dict)
+    get_top_1000_all()
+    # with open('clubs_with_authors.pickle','rb') as f:
+    #     authors = pickle.load(f)
+    # stripped_dict = clean_initial(authors)
+    # sorted_authors = count_initial(stripped_dict)
+    # final_dict = create_final_dict(sorted_authors,stripped_dict)
     # all_authors_sorted = get_all_authors(final_dict)
     # with open('final_dict.pickle','wb') as b:
     #     pickle.dump(final_dict,b, protocol = pickle.HIGHEST_PROTOCOL)

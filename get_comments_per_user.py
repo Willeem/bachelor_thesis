@@ -37,14 +37,14 @@ def get_comments(author,author_with_club):
     with open(path_name, 'w') as f:
         for comment in reddit.redditor(str(author)).comments.new(limit=None):
             if comment.subreddit_id == "t5_2qi58":
-                f.write(comment.body)
+                f.write("{}\n ########## \n".format(comment.body))
                 count += 1
     user_logger.info("Wrote {} comments to file {}".format(count,path_name))
 
 def main():
     startTime = datetime.now()
     author_with_club = make_searchable_dict(clubs_with_authors)
-    for author in authors[4372:]:
+    for author in authors:
         try:
             get_comments(author,author_with_club)
         except:
