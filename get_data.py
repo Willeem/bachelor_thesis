@@ -5,7 +5,7 @@ import pickle
 from praw.models import MoreComments
 from collections import defaultdict
 from operator import itemgetter
-
+import os
 reddit = praw.Reddit(client_id='os.environ.get(CLIENT_ID)',
                      client_secret='os.environ.get(CLIENT_SECRET)',
                      user_agent='my user agent')
@@ -33,9 +33,9 @@ def clean_initial(authors):
         replaced = stripped.replace(' ','_')
         for kek in authors[item]:
             if replaced == "Barcelona":
-                replaced = "FC Barcelona"
-            if replaced == "Bayern Munich":
-                replaced = "Bayern München"
+                replaced = "FC_Barcelona"
+            if replaced == "Bayern_Munich":
+                replaced = "Bayern_München"
             stripped_dict[replaced].add(kek)
     return stripped_dict
 
@@ -66,19 +66,19 @@ def get_all_authors(final_dict):
 
 
 def main():
-    get_usernames()
-    # with open('clubs_with_authors.pickle','rb') as f:
-    #     authors = pickle.load(f)
-    # stripped_dict = clean_initial(authors)
-    # sorted_authors = count_initial(stripped_dict)
-    # final_dict = create_final_dict(sorted_authors,stripped_dict)
-    # all_authors_sorted = get_all_authors(final_dict)
-    # with open('final_dict.pickle','wb') as b:
-    #     pickle.dump(final_dict,b, protocol = pickle.HIGHEST_PROTOCOL)
-    # with open('authors.pickle','wb') as b:
-    #     pickle.dump(all_authors_sorted,b, protocol = pickle.HIGHEST_PROTOCOL)
+    #get_usernames()
+    with open('clubs_with_authors.pickle','rb') as f:
+        authors = pickle.load(f)
+    stripped_dict = clean_initial(authors)
+    sorted_authors = count_initial(stripped_dict)
+    final_dict = create_final_dict(sorted_authors,stripped_dict)
+    all_authors_sorted = get_all_authors(final_dict)
+    with open('final_dict.pickle','wb') as b:
+        pickle.dump(final_dict,b, protocol = pickle.HIGHEST_PROTOCOL)
+    with open('authors.pickle','wb') as b:
+        pickle.dump(all_authors_sorted,b, protocol = pickle.HIGHEST_PROTOCOL)
 
-    #create_folders(final_dict)
+    create_folders(final_dict)
 
 if __name__ == "__main__":
     main()
