@@ -71,14 +71,15 @@ def main():
         authors = pickle.load(f)
     stripped_dict = clean_initial(authors)
     sorted_authors = count_initial(stripped_dict)
-    final_dict = create_final_dict(sorted_authors,stripped_dict)
-    all_authors_sorted = get_all_authors(final_dict)
-    with open('final_dict.pickle','wb') as b:
-        pickle.dump(final_dict,b, protocol = pickle.HIGHEST_PROTOCOL)
-    with open('authors.pickle','wb') as b:
-        pickle.dump(all_authors_sorted,b, protocol = pickle.HIGHEST_PROTOCOL)
+    print(sorted_authors)
+    # final_dict = create_final_dict(sorted_authors,stripped_dict)
+    # all_authors_sorted = get_all_authors(final_dict)
+    # with open('final_dict.pickle','wb') as b:
+    #     pickle.dump(final_dict,b, protocol = pickle.HIGHEST_PROTOCOL)
+    # with open('authors.pickle','wb') as b:
+    #     pickle.dump(all_authors_sorted,b, protocol = pickle.HIGHEST_PROTOCOL)
 
-    create_folders(final_dict)
+    #create_folders(final_dict)
 
 if __name__ == "__main__":
     main()
