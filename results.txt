@@ -1,0 +1,61 @@
+Unbalanced data met len(words)  >2000 and len(files) >2000:
+TEST SET !!!!
+
+n: 26 Accuracy:0.9357326478149101
+                   precision    recall  f1-score   support
+
+          Arsenal       0.96      0.91      0.94        89
+          Chelsea       0.93      0.95      0.94        73
+        Liverpool       0.95      0.93      0.94       116
+Manchester_United       0.91      0.95      0.93       111
+
+        micro avg       0.94      0.94      0.94       389
+        macro avg       0.94      0.94      0.94       389
+     weighted avg       0.94      0.94      0.94       389
+
+Runtime: 0:01:12.591997 seconds.
+
+Unbalanced data met len(words) > 2000 and len(users) > 50:
+DEV SET!!!!
+n: 26 Accuracy:0.8393524283935243
+                          precision    recall  f1-score   support
+
+                AC_Milan       0.77      0.94      0.85        18
+                 AS_Roma       1.00      0.62      0.77         8
+                    Ajax       0.87      0.93      0.90        14
+                 Arsenal       0.86      0.82      0.84        89
+             Aston_Villa       0.70      1.00      0.82         7
+          Bayern_München       0.86      0.76      0.81        25
+                 Benfica       0.75      0.75      0.75        12
+       Borussia_Dortmund       0.75      0.80      0.77        15
+                  Celtic       0.73      0.89      0.80         9
+                 Chelsea       0.95      0.85      0.90        73
+                 Everton       1.00      0.79      0.88        14
+            FC_Barcelona       0.76      0.92      0.83        62
+                FC_Porto       1.00      0.80      0.89        10
+          Internazionale       0.78      0.64      0.70        11
+                Juventus       0.86      0.76      0.81        25
+            Leeds_United       0.67      0.75      0.71         8
+       Leicester_City_FC       1.00      0.86      0.92         7
+               Liverpool       0.88      0.84      0.86       115
+         Manchester_City       0.91      0.88      0.90        34
+       Manchester_United       0.83      0.85      0.84       111
+        Newcastle_United       0.91      0.62      0.74        16
+     Paris_Saint-Germain       0.77      1.00      0.87        10
+             Real_Madrid       0.76      0.88      0.81        50
+             Southampton       0.67      0.57      0.62         7
+Sporting_Clube_de_Portug       0.60      1.00      0.75         6
+       Tottenham_Hotspur       0.89      0.85      0.87        39
+         West_Ham_United       0.78      0.88      0.82         8
+
+               micro avg       0.84      0.84      0.84       803
+               macro avg       0.83      0.82      0.82       803
+            weighted avg       0.85      0.84      0.84       803
+
+Runtime: 0:02:49.552541 seconds.
+
+
+
+n: 97 Accuracy:0.8617683686176837
+n: 98 Accuracy:0.8617683686176837
+n: 99 Accuracy:0.8617683686176837

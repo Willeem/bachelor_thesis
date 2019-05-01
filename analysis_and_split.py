@@ -25,20 +25,23 @@ def analysis():
     teams = get_items_in_directory('directory','data/')
     users_after_filters = defaultdict(list)
     for team in teams:
-        users = 0
-        word_count = 0
-        files = get_items_in_directory('file','data/' + team)
-        for user in files:
-            data = open('data/' + team + '/' + user, 'r', encoding='utf-8').read()
-            split_data = data.split('##########')
-            word_count = count_words(split_data)
-            if len(files) > 2000:
-                #if word_count > 2000:
-                users += 1
-                users_after_filters[team].append(user)
-                if users == 2000:
-                    break
-        print(team,users)
+        if team not in ['Argentina','Australia','Belgium','Brazil','Colombia',
+        'Croatia','England','France','Germany','Mexico','Poland','Portugal',
+        'Republic_of_Ireland','Sweden','The_Netherlands','United_States']:
+            users = 0
+            word_count = 0
+            files = get_items_in_directory('file','data/' + team)
+            for user in files:
+                data = open('data/' + team + '/' + user, 'r', encoding='utf-8').read()
+                split_data = data.split('##########')
+                word_count = count_words(split_data)
+                if word_count > 2000:
+                    users += 1
+                    users_after_filters[team].append(user)
+            if users < 50:
+                del users_after_filters[team]
+
+            print(team,users)
     return users_after_filters
 
 
