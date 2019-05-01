@@ -26,18 +26,19 @@ def analysis():
     users_after_filters = defaultdict(list)
     for team in teams:
         users = 0
-        feasible_users = 0
         word_count = 0
         files = get_items_in_directory('file','data/' + team)
         for user in files:
             data = open('data/' + team + '/' + user, 'r', encoding='utf-8').read()
             split_data = data.split('##########')
-            users += 1
-            word_count += count_words(split_data)
-            if word_count > 2000:
+            word_count = count_words(split_data)
+            if len(files) > 2000:
+                #if word_count > 2000:
+                users += 1
                 users_after_filters[team].append(user)
-                feasible_users += 1
-        print(team,users,feasible_users)
+                if users == 2000:
+                    break
+        print(team,users)
     return users_after_filters
 
 
