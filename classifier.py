@@ -94,9 +94,9 @@ def high_information(comments,labels,words,n):
     all_words = [word for comment in comments for word in comment]
     labelled_words = [(label,words[label]) for label in labels_set]
     high_info_words = set(high_information_words(labelled_words,n=n))
-    #print("Number of words in the data: %i" % len(all_words))
-    #print("Number of distinct words in the data: %i" % len(set(all_words)))
-    #print("Number of distinct high info words in the data: %i" % len(high_info_words))
+    print("Number of words in the data: %i" % len(all_words))
+    print("Number of distinct words in the data: %i" % len(set(all_words)))
+    print("Number of distinct high info words in the data: %i" % len(high_info_words))
     return high_info_words
 
 def show_most_informative_features(vectorizer, clf, class_labels, n=20):
@@ -116,7 +116,7 @@ def main():
     startTime = datetime.now()
     Xtrain, Ytrain, words = get_features('train')
     Xtest, Ytest, words_not_used = get_features('dev')
-    for n in range(5,100):
+    for n in range(100,200):
         high_info_words = high_information(Xtrain,Ytrain,words,n)
         HIXtrain, HIYtrain = filter_high_info_and_stop_words(Xtrain,Ytrain,high_info_words)
         HIXtest, HIYtest = filter_high_info_and_stop_words(Xtest,Ytest,high_info_words)
