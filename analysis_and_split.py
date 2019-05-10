@@ -4,6 +4,7 @@ from os import listdir, makedirs, getcwd
 from os.path import isdir, isfile, join
 from collections import defaultdict
 from shutil import copy2
+from operator import itemgetter
 
 
 def get_items_in_directory(filetype,directory):
@@ -20,11 +21,27 @@ def count_words(data):
         word_count += len(comment)
     return word_count
 
+def print_analysis(analysis_dict):
+    sorted_analysis = sorted(analysis_dict.items(), key=itemgetter(0))
+    total_users = 0
+    total_words = 0
+    print("\t%-25s\t%-5s\t %.5s \t%.5s" % ("Club", "Users", "Words", "Average words per user"))
+    for i in range(len(sorted_analysis)):
+        item = sorted_analysis[i][0]
+        if sorted_analysis[i][1]['users'] > 0:
+            total_users += analysis_dict[item]['users']
+            total_words += analysis_dict[item]['words']
+            print("\t%-25s & %-5i & %-5i & %.2f \\\\" % (item, analysis_dict[item]['users'],analysis_dict[item]['words'], (analysis_dict[item]['words']/analysis_dict[item]['users'])))
+    print("\t%-25s & %-5i & %-5i & %.2f \\\\" % ("Total", total_users, total_words,(total_words/total_users)))
+
 
 def analysis():
     teams = get_items_in_directory('directory','data/')
     users_after_filters = defaultdict(list)
+    analysis_dict = {}
+    total_users = 0
     for team in teams:
+        analysis_dict[team] = defaultdict(int)
         if team not in ['Argentina','Australia','Belgium','Brazil','Colombia',
         'Croatia','England','France','Germany','Mexico','Poland','Portugal',
         'Republic_of_Ireland','Sweden','The_Netherlands','United_States']:
@@ -36,12 +53,17 @@ def analysis():
                 split_data = data.split('##########')
                 word_count = count_words(split_data)
                 if word_count > 2000:
+                    analysis_dict[team]['words'] += word_count
                     users += 1
                     users_after_filters[team].append(user)
             if users < 50:
                 del users_after_filters[team]
+            else:
+                total_users += users
+                analysis_dict[team]['users'] += users
 
-            print(team,users)
+    print("Total users: {} from {} teams.".format(total_users,len(users_after_filters.keys())))
+    print_analysis(analysis_dict)
     return users_after_filters
 
 
