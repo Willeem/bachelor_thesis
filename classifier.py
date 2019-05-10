@@ -42,7 +42,7 @@ def get_features(type):
             output_documents.append([inner for outer in usable_comments for inner in outer])
             output_labels.append(team)
             count += 1
-            #if count == 50:
+            #if count == 5:
                 #break
     return output_documents,output_labels, words
 
@@ -99,38 +99,34 @@ def high_information(comments,labels,words,n):
     print("Number of distinct high info words in the data: %i" % len(high_info_words))
     return high_info_words
 
-def show_most_informative_features(vectorizer, clf, class_labels, n=20):
+def show_most_informative_features(vectorizer, classifier, class_label, n=20):
+    labelid = list(classifier.classes_).index(class_label)
     feature_names = vectorizer.get_feature_names()
-    for i, class_label in enumerate(class_labels):
-        coefs_with_fns = sorted(zip(clf.coef_[i], feature_names))
-        top = zip(coefs_with_fns[:n], coefs_with_fns[:-(n + 1):-1])
-        print(class_label)
-        for (coef_1, fn_1), (coef_2, fn_2) in top:
-            print("\t%.4f\t%-15s\t\t%.4f\t%-15s" % (coef_1, fn_1, coef_2, fn_2))
-        print('\n')
+    topn = sorted(zip(classifier.coef_[labelid],feature_names))[-n:]
 
-#def check_overfit(HIXtrain,HIYtrain):
+    for coef, feat in topn:
+        print(class_label,feat,coef)
 
 
 def main():
     startTime = datetime.now()
     Xtrain, Ytrain, words = get_features('train')
-    Xtest, Ytest, words_not_used = get_features('dev')
-    for n in range(100,200):
-        high_info_words = high_information(Xtrain,Ytrain,words,n)
-        HIXtrain, HIYtrain = filter_high_info_and_stop_words(Xtrain,Ytrain,high_info_words)
-        HIXtest, HIYtest = filter_high_info_and_stop_words(Xtest,Ytest,high_info_words)
-        vec = CountVectorizer(preprocessor=identity,tokenizer=identity)
-        clf = MultinomialNB()
-        #clf = LinearSVC()
-        #clf = LogisticRegression(multi_class='ovr')
-        classifier = Pipeline([('vec',vec),('clf',clf)])
-        classifier.fit(HIXtrain,HIYtrain)
-        Yguess = classifier.predict(HIXtest)
-        #print(check_overfit(HIXtrain,HIYtrain))
-        #print(show_most_informative_features(vec,clf,list(set(HIYtrain))))
-        print("n: {} Accuracy:{}".format(n,accuracy_score(HIYtest,Yguess)))
-    #print(classification_report(HIYtest,Yguess))
+    Xtest, Ytest, words_not_used = get_features('test')
+    n = 100
+    high_info_words = high_information(Xtrain,Ytrain,words,n)
+    HIXtrain, HIYtrain = filter_high_info_and_stop_words(Xtrain,Ytrain,high_info_words)
+    #HIXtest, HIYtest = filter_high_info_and_stop_words(Xtest,Ytest,high_info_words)
+    vec = CountVectorizer(preprocessor=identity,tokenizer=identity)
+    clf = MultinomialNB()
+    #clf = LinearSVC()
+    #clf = LogisticRegression(multi_class='ovr')
+    classifier = Pipeline([('vec',vec),('clf',clf)])
+    classifier.fit(HIXtrain,HIYtrain)
+    Yguess = classifier.predict(Xtest)
+    for item in list(set(HIYtrain)):
+        show_most_informative_features(vec,clf,item)
+    print("Accuracy:{}".format(accuracy_score(Ytest,Yguess)))
+    print(classification_report(Ytest,Yguess))
     print("Runtime: {} seconds.".format(datetime.now()-startTime))
 if __name__ == "__main__":
     main()

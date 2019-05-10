@@ -41,9 +41,12 @@ def clean_initial(authors):
 
 def count_initial(stripped_dict):
     count_dict = defaultdict(int)
+    total_count = 0
     for item in stripped_dict:
         count_dict[item] = len(stripped_dict[item])
+        total_count += len(stripped_dict[item])
     sorted_authors = sorted(count_dict.items(), key=itemgetter(1), reverse=True)
+    print("Total count: {} from {} teams.".format(total_count,len(count_dict.keys())))
     return sorted_authors
 
 def create_final_dict(sorted_authors,stripped_dict):
@@ -52,7 +55,8 @@ def create_final_dict(sorted_authors,stripped_dict):
     for item in sorted_authors:
         if item[1] > 100:
             final_dict[item[0]] = stripped_dict[item[0]]
-            total += 1
+            total += item[1]
+    print("Usable users: {} from {} teams".format(total,len(final_dict.keys())))
     return final_dict
 
 def create_folders(clubs_with_authors):
@@ -72,7 +76,7 @@ def main():
     stripped_dict = clean_initial(authors)
     sorted_authors = count_initial(stripped_dict)
     print(sorted_authors)
-    # final_dict = create_final_dict(sorted_authors,stripped_dict)
+    final_dict = create_final_dict(sorted_authors,stripped_dict)
     # all_authors_sorted = get_all_authors(final_dict)
     # with open('final_dict.pickle','wb') as b:
     #     pickle.dump(final_dict,b, protocol = pickle.HIGHEST_PROTOCOL)
