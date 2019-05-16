@@ -5,14 +5,14 @@ from os.path import isdir, isfile, join
 from collections import defaultdict
 from shutil import copy2
 from operator import itemgetter
-
+from os import listdir, makedirs, getcwd
+from os.path import isdir, isfile, join
 
 def get_items_in_directory(filetype,directory):
     """Lists all items in a directory depending on filetype (directory or file)"""
     if filetype == 'directory':
         return [f for f in listdir(directory) if isdir(join(directory,f))]
     return [f for f in listdir(directory) if isfile(join(directory,f))]
-
 
 def count_words(data):
     word_count = 0
@@ -22,10 +22,12 @@ def count_words(data):
     return word_count
 
 def print_analysis(analysis_dict):
+    """Prints the amount of users, words and average words per user per club,
+    formatted so that it can be easily imported in LaTeX"""
     sorted_analysis = sorted(analysis_dict.items(), key=itemgetter(0))
     total_users = 0
     total_words = 0
-    print("\t%-25s\t%-5s\t %.5s \t%.5s" % ("Club", "Users", "Words", "Average words per user"))
+    print("\t%-25s\t%-5s\t %.5s \t%-25s" % ("Club", "Users", "Words", "Average words per user"))
     for i in range(len(sorted_analysis)):
         item = sorted_analysis[i][0]
         if sorted_analysis[i][1]['users'] > 0:
@@ -42,25 +44,22 @@ def analysis():
     total_users = 0
     for team in teams:
         analysis_dict[team] = defaultdict(int)
-        if team not in ['Argentina','Australia','Belgium','Brazil','Colombia',
-        'Croatia','England','France','Germany','Mexico','Poland','Portugal',
-        'Republic_of_Ireland','Sweden','The_Netherlands','United_States']:
-            users = 0
-            word_count = 0
-            files = get_items_in_directory('file','data/' + team)
-            for user in files:
-                data = open('data/' + team + '/' + user, 'r', encoding='utf-8').read()
-                split_data = data.split('##########')
-                word_count = count_words(split_data)
-                if word_count > 2000:
-                    analysis_dict[team]['words'] += word_count
-                    users += 1
-                    users_after_filters[team].append(user)
-            if users < 50:
-                del users_after_filters[team]
-            else:
-                total_users += users
-                analysis_dict[team]['users'] += users
+        users = 0
+        word_count = 0
+        files = get_items_in_directory('file','data/' + team)
+        for user in files:
+            data = open('data/' + team + '/' + user, 'r', encoding='utf-8').read()
+            split_data = data.split()
+            word_count = count_words(split_data)
+            if word_count > 2000:
+                analysis_dict[team]['words'] += word_count
+                users += 1
+                users_after_filters[team].append(user)
+        if users < 50:
+            del users_after_filters[team]
+        else:
+            total_users += users
+            analysis_dict[team]['users'] += users
 
     print("Total users: {} from {} teams.".format(total_users,len(users_after_filters.keys())))
     print_analysis(analysis_dict)
@@ -84,6 +83,6 @@ def split_train_test_dev(users_after_filters):
 
 def main():
     users_after_filters = analysis()
-    split_train_test_dev(users_after_filters)
+    #split_train_test_dev(users_after_filters)
 if __name__ == "__main__":
     main()

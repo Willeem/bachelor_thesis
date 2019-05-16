@@ -5,46 +5,44 @@ from sklearn.naive_bayes import *
 from sklearn.pipeline import Pipeline
 from sklearn.metrics import accuracy_score, classification_report
 from sklearn.linear_model import LogisticRegression
-from analysis_and_split import get_items_in_directory
+from os import listdir, makedirs, getcwd
+from os.path import isdir, isfile, join
 from datetime import datetime
 from nltk.util import ngrams
-from nltk.tokenize import word_tokenize, RegexpTokenizer
+
 from nltk.corpus import stopwords
 from nltk.probability import FreqDist, ConditionalFreqDist
 from nltk.metrics import BigramAssocMeasures
 from operator import itemgetter
-import re
+import numpy as np
 
-def removeURL(comment):
-    """Removes URLs from comments"""
-    return re.sub(r'http\S+', '', comment)
+def get_items_in_directory(filetype,directory):
+    """Lists all items in a directory depending on filetype (directory or file)"""
+    if filetype == 'directory':
+        return [f for f in listdir(directory) if isdir(join(directory,f))]
+    return [f for f in listdir(directory) if isfile(join(directory,f))]
 
-
-def get_features(type):
+def get_features(types):
     output_labels = []
-    output_documents = []
+    features = []
     words = defaultdict(list)
-    labels = get_items_in_directory('directory',type)
-    for team in labels:
-        files = get_items_in_directory('file',type + '/' + team)
-        count = 0
-        for file in files:
-            data = open(type + '/' + team + '/' + file).read()
-            comments = data.split("##########")
-            usable_comments = []
-            for comment in comments:
-                comment = removeURL(comment)
-                tok_comment = RegexpTokenizer(r'\w+').tokenize(comment.strip().lower())
-                if len(tok_comment) > 0:
-                    for word in tok_comment:
-                        words[team].append(word)
-                    usable_comments.append(tok_comment)
-            output_documents.append([inner for outer in usable_comments for inner in outer])
-            output_labels.append(team)
-            count += 1
-            #if count == 5:
-                #break
-    return output_documents,output_labels, words
+    for type in types:
+        labels = get_items_in_directory('directory',type)
+        for team in labels:
+            files = get_items_in_directory('file',type + '/' + team)
+            count = 0
+            for file in files:
+                with open(type + '/' + team + '/' + file) as f:
+                    data = f.read()
+                    feats = data.split()
+                for word in feats:
+                    words[team].append(word)
+                features.append(feats)
+                output_labels.append(team)
+                count += 1
+                #if count == 5:
+                    #break
+    return features,output_labels, words
 
 
 def filter_high_info_and_stop_words(comments,labels,high_info_words):
@@ -84,6 +82,7 @@ def high_information_words(labelled_words, score_fn=BigramAssocMeasures.chi_sq,n
             score = score_fn(n_ii, (n_ix, n_xi), n_xx)
             word_scores[word] = score
         bestwords = sorted(word_scores.items(), key=itemgetter(1),reverse=True)[:n]
+        print(label,"& \\textit{"," ".join([word for word, score in bestwords[:10]]),"} \\\\")
         high_info_words |= set([word for word, score in bestwords])
 
     return high_info_words
@@ -91,6 +90,7 @@ def high_information_words(labelled_words, score_fn=BigramAssocMeasures.chi_sq,n
 
 def high_information(comments,labels,words,n):
     labels_set = set(labels)
+    labels_set = sorted(labels_set)
     all_words = [word for comment in comments for word in comment]
     labelled_words = [(label,words[label]) for label in labels_set]
     high_info_words = set(high_information_words(labelled_words,n=n))
@@ -110,12 +110,12 @@ def show_most_informative_features(vectorizer, classifier, class_label, n=20):
 
 def main():
     startTime = datetime.now()
-    Xtrain, Ytrain, words = get_features('train')
-    Xtest, Ytest, words_not_used = get_features('test')
+    Xtrain, Ytrain, words = get_features(['train','dev'])
+    Xtest, Ytest, words_not_used = get_features(['test'])
     n = 100
+    #for n in [10,50,100,500,1000,5000,10000]:
     high_info_words = high_information(Xtrain,Ytrain,words,n)
     HIXtrain, HIYtrain = filter_high_info_and_stop_words(Xtrain,Ytrain,high_info_words)
-    #HIXtest, HIYtest = filter_high_info_and_stop_words(Xtest,Ytest,high_info_words)
     vec = CountVectorizer(preprocessor=identity,tokenizer=identity)
     clf = MultinomialNB()
     #clf = LinearSVC()
@@ -123,10 +123,13 @@ def main():
     classifier = Pipeline([('vec',vec),('clf',clf)])
     classifier.fit(HIXtrain,HIYtrain)
     Yguess = classifier.predict(Xtest)
-    for item in list(set(HIYtrain)):
-        show_most_informative_features(vec,clf,item)
+        #for item in list(set(HIYtrain)):
+    #    show_most_informative_features(vec,clf,item)
     print("Accuracy:{}".format(accuracy_score(Ytest,Yguess)))
     print(classification_report(Ytest,Yguess))
+    misclassified = np.where(Ytest != Yguess)
+    for item in np.nditer(misclassified):
+        print(Ytest[item],Yguess[item])
     print("Runtime: {} seconds.".format(datetime.now()-startTime))
 if __name__ == "__main__":
     main()
