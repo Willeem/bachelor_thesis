@@ -30,6 +30,7 @@ def preprocess():
                         tok_comment = RegexpTokenizer(r'\w+').tokenize(comment.strip().lower())
                         if len(tok_comment) > 0:
                             usable_comments.append(tok_comment)
+                            usable_comments.append('##########')
                 output_documents = [inner for outer in usable_comments for inner in outer]
                 with open('data/' + team + '/' + user, 'w', encoding='utf-8') as outfile:
                     outfile.write(" ".join(output_documents))

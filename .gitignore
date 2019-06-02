@@ -3,3 +3,8 @@
 /train
 /test
 data.zip
+*.html
+*.Rmd
+__pycache__/*
+/data (kopie)
+
