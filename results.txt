@@ -150,3 +150,235 @@ Southampton & \textit{ saints hughes pellegrino redmond reed puel forster gabbi 
 Sporting Clube de Portugal & \textit{ sporting gelson dost bruno é não matheus benfica portuguese podence } \\ \hline
 Tottenham Hotspur & \textit{ poch kane spurs eriksen dele levy sissoko lamela winks toby } \\ \hline
 West Ham United & \textit{ ham lanzini bilic arnie west payet noble obiang sullivan kouyate } \\ \hline
+
+
+TEST SET, N = 100, MULTINOMIALNB,
+Number of words in the data: 51821708
+Number of distinct words in the data: 223319
+Number of distinct high info words in the data: 2319
+Accuracy:0.890625
+                          precision    recall  f1-score   support
+
+                AC_Milan       0.84      0.89      0.86        18
+                 AS_Roma       0.89      1.00      0.94         8
+                    Ajax       0.87      0.87      0.87        15
+                 Arsenal       0.89      0.87      0.88        91
+             Aston_Villa       1.00      0.88      0.93         8
+          Bayern_München       0.85      0.85      0.85        26
+                 Benfica       0.86      0.92      0.89        13
+       Borussia_Dortmund       0.88      0.88      0.88        16
+                  Celtic       1.00      0.70      0.82        10
+                 Chelsea       0.97      0.87      0.92        75
+                 Everton       0.93      0.93      0.93        15
+            FC_Barcelona       0.81      0.92      0.86        64
+                FC_Porto       0.91      0.91      0.91        11
+          Internazionale       0.92      0.92      0.92        12
+                Juventus       1.00      0.81      0.89        26
+            Leeds_United       1.00      1.00      1.00         8
+       Leicester_City_FC       1.00      1.00      1.00         7
+               Liverpool       0.91      0.87      0.89       119
+         Manchester_City       0.94      0.86      0.90        35
+       Manchester_United       0.86      0.94      0.90       114
+        Newcastle_United       0.94      0.88      0.91        17
+     Paris_Saint-Germain       0.73      0.80      0.76        10
+             Real_Madrid       0.85      0.92      0.89        51
+             Southampton       1.00      1.00      1.00         7
+Sporting_Clube_de_Portug       0.71      0.83      0.77         6
+       Tottenham_Hotspur       0.89      0.95      0.92        41
+         West_Ham_United       1.00      0.67      0.80         9
+
+               micro avg       0.89      0.89      0.89       832
+               macro avg       0.90      0.89      0.89       832
+            weighted avg       0.90      0.89      0.89       832
+
+
+
+
+on dev bigrams n = 10000
+Number of words in the data: 46087159
+Number of distinct words in the data: 5297321
+Number of distinct high info words in the data: 263479
+Accuracy:0.557997557997558
+
+on dev bigrams n = 5000
+Number of words in the data: 46087159
+Number of distinct words in the data: 5297321
+Number of distinct high info words in the data: 131114
+Accuracy:0.6263736263736264
+
+on dev bigrams n = 1000
+Number of words in the data: 46087159
+Number of distinct words in the data: 5297321
+Number of distinct high info words in the data: 26092
+Accuracy:0.7643467643467643
+
+on dev bigrams n = 100
+Number of words in the data: 46087159
+Number of distinct words in the data: 5297321
+Number of distinct high info words in the data: 2619
+Accuracy:0.6923076923076923
+
+on dev bigrams n = 50
+Number of words in the data: 46087159
+Number of distinct words in the data: 5297321
+Number of distinct high info words in the data: 1313
+Accuracy:0.6654456654456654
+
+on dev bigrams n = 10
+Number of distinct high info words in the data: 261
+[1,2] n: 10 Accuracy:0.5787545787545788
+
+
+MultinomialNB count: 0.5824175824175825
+MultinomialNB tfidf: 0.18803418803418803
+SVM count: 0.7728937728937729
+SVM tfidf: 0.8424908424908425
+LogReg count: 0.7631257631257631
+LogReg tfidf: 0.6141636141636142
+
+
+SVM met eerst de Count dan de TFIDF vectorizer:
+n: 10 Accuracy:0.78998778998779
+n: 10 Accuracy:0.8229548229548229
+Number of distinct high info words in the data: 1241
+n: 50 Accuracy:0.8070818070818071
+n: 50 Accuracy:0.8681318681318682
+Number of distinct high info words in the data: 2327
+n: 100 Accuracy:0.8363858363858364
+n: 100 Accuracy:0.8791208791208791
+Number of distinct high info words in the data: 10412
+n: 500 Accuracy:0.7936507936507936
+n: 500 Accuracy:0.8693528693528694
+Number of distinct high info words in the data: 21065
+n: 1000 Accuracy:0.7936507936507936
+n: 1000 Accuracy:0.8681318681318682
+Number of distinct high info words in the data: 103455
+n: 5000 Accuracy:0.7924297924297924
+n: 5000 Accuracy:0.8632478632478633
+Number of distinct high info words in the data: 164589
+n: 10000 Accuracy:0.78998778998779
+n: 10000 Accuracy:0.8583638583638583
+
+
+MultinomialNB met TFIDF, Log met Count & TfidfVectorizer
+n: 10 Accuracy:0.7765567765567766
+n: 10 Accuracy:0.8131868131868132
+n: 10 Accuracy:0.8192918192918193
+Number of distinct high info words in the data: 1241
+n: 50 Accuracy:0.800976800976801
+n: 50 Accuracy:0.833943833943834
+n: 50 Accuracy:0.8498168498168498
+Number of distinct high info words in the data: 2327
+n: 100 Accuracy:0.7704517704517705
+n: 100 Accuracy:0.8302808302808303
+n: 100 Accuracy:0.851037851037851
+Number of distinct high info words in the data: 10412
+n: 500 Accuracy:0.4652014652014652
+n: 500 Accuracy:0.7985347985347986
+n: 500 Accuracy:0.8315018315018315
+Number of distinct high info words in the data: 21065
+n: 1000 Accuracy:0.34065934065934067
+n: 1000 Accuracy:0.7973137973137974
+n: 1000 Accuracy:0.8168498168498168
+Number of distinct high info words in the data: 103455
+n: 5000 Accuracy:0.23687423687423687
+n: 5000 Accuracy:0.7863247863247863
+n: 5000 Accuracy:0.7826617826617827
+Number of distinct high info words in the data: 164589
+n: 10000 Accuracy:0.21978021978021978
+n: 10000 Accuracy:0.7716727716727717
+n: 10000 Accuracy:0.7741147741147741
+
+MultinomialNB met Count
+Number of distinct high info words in the data: 260
+n: 10 Accuracy:0.811965811965812
+Number of distinct high info words in the data: 1241
+n: 50 Accuracy:0.8449328449328449
+Number of distinct high info words in the data: 2327
+n: 100 Accuracy:0.8559218559218559
+Number of distinct high info words in the data: 10412
+n: 500 Accuracy:0.8400488400488401
+Number of distinct high info words in the data: 21065
+n: 1000 Accuracy:0.8095238095238095
+Number of distinct high info words in the data: 103455
+n: 5000 Accuracy:0.6642246642246642
+Number of distinct high info words in the data: 164589
+n: 10000 Accuracy:0.6178266178266179
+
+
+
+
+Leeds United & 1.00 &1.00 &1.00\\
+Leicester City FC & 1.00 &1.00 &1.00\\
+Southampton & 1.00 &1.00 &1.00\\
+Tottenham Hotspur & 0.95 &0.98 &0.96 \\
+Chelsea & 0.99 &0.91 &0.94 \\
+Newcastle United & 1.00 &0.88 &0.94 \\
+Manchester United & 0.89 &0.95 &0.92 \\
+Sporting Clube de Portug & 0.86 &1.00 &0.92\\
+Arsenal & 0.89 &0.93 &0.91 \\
+Liverpool & 0.90 &0.92 &0.91 \\
+Everton & 0.93 &0.87 &0.90 \\
+AC Milan & 0.89 &0.89 &0.89 \\
+Celtic & 1.00 &0.80 &0.89 \\
+FC Barcelona & 0.87 &0.92 &0.89 \\
+AS Roma & 0.80 &1.00 &0.89\\
+West Ham United & 1.00 &0.78 &0.88  \\
+Borussia Dortmund & 0.88 &0.88 &0.88 \\
+Ajax & 0.87 &0.87 &0.87 \\
+Juventus & 1.00 &0.77 &0.87 \\
+Real Madrid & 0.87 &0.88 &0.87 \\
+Benfica & 1.00 &0.77 &0.87\\
+Bayern München & 0.88 &0.85 &0.86 \\
+Manchester City & 0.86 &0.86 &0.86 \\
+Internazionale & 0.79 &0.92 &0.85 \\
+Paris Saint-Germain & 0.89 &0.80 &0.84  \\
+Aston Villa & 0.86 &0.75 &0.80\\
+FC Porto & 0.80 &0.73 &0.76 \\
+
+
+10 fold cross validation zoals het nu in scriptie staat, TFIDF, N=100 NIET ZEKER OF DIT KLOPT:
+
+Accuracy:0.9237026993713793 Macro F: 0.9055331992535606
+Accuracy:0.9426916440719744 Macro F: 0.9233017553561024
+Accuracy:0.9633920867743129 Macro F: 0.9755604206867167
+Accuracy:0.9465122011338427 Macro F: 0.9551744392835907
+Accuracy:0.9412127187577027 Macro F: 0.9595312957231449
+Accuracy:0.941821767533588 Macro F: 0.9658182584029615
+Accuracy:0.9500862706433325 Macro F: 0.9694993524529336
+Accuracy:0.9429310982373967 Macro F: 0.9285071861816474
+Accuracy:0.9598225289622874 Macro F: 0.9676139755407973
+Accuracy:0.9635198422479665 Macro F: 0.966680911515194
+
+POS TAGS, OOK NIET ZEKER OF HET KLOPT, RUNNEN DUURT 1 UUR:
+Accuracy:0.8152348083323062 Macro F: 0.7380327618329531
+Accuracy:0.8931476460438748 Macro F: 0.8512618009806919
+Accuracy:0.9499568593615185 Macro F: 0.9696501922209332
+Accuracy:0.8940103524772 Macro F: 0.8845656963750768
+Accuracy:0.8640621148631994 Macro F: 0.8911000488341135
+Accuracy:0.8885738937507703 Macro F: 0.9419863253789974
+Accuracy:0.913606112891299 Macro F: 0.9588548005604254
+Accuracy:0.8930112165660051 Macro F: 0.819657236979965
+Accuracy:0.9458959822528963 Macro F: 0.9567377486076784
+Accuracy:0.9551392654670939 Macro F: 0.9505592973148723
+
+
+
+Character N GRAMS COUNTVECTORIZER:
+2 Accuracy:0.5421245421245421
+3 Accuracy:0.7081807081807082
+4 Accuracy:0.7594627594627594
+5 Accuracy:0.7838827838827839
+
+COUNT VECTORIZER UNIGRAMS:
+Accuracy:0.7741147741147741
+
+TFIDFVECTORIZER CHARACTER NGRAMS
+2 Accuracy:0.2979242979242979
+3 Accuracy:0.46642246642246643
+4 Accuracy:0.7606837606837606
+5 Accuracy:0.833943833943834
+
+POS TAGS
+COUNT Accuracy:0.7484737484737485
+TFIDF Accuracy:0.8217338217338217
