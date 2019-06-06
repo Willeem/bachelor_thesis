@@ -424,3 +424,31 @@ i: (5, 5) Accuracy:0.16117216117216118
 
 i: (5, 5) Accuracy:0.7448107448107448
 i: (5, 5) Accuracy:0.5995115995115995
+
+Paris Saint-Germain & 0.90 & 0.96 & 0.93 & \\
+Ajax & 0.94 & 0.91 & 0.92 & \\
+Celtic & 0.94 & 0.88 & 0.91 & \\
+Chelsea & 0.91 & 0.91 & 0.91 & \\
+Leicester City FC & 1.00 & 0.83 & 0.91 & \\
+Manchester City & 0.95 & 0.83 & 0.89 & \\
+Tottenham Hotspur & 0.92 & 0.84 & 0.88 & \\
+AC Milan & 0.96 & 0.80 & 0.87 & \\
+Bayern München & 0.89 & 0.84 & 0.87 & \\
+Juventus & 0.90 & 0.84 & 0.87 & \\
+AS Roma & 1.00 & 0.75 & 0.86 & \\
+Arsenal & 0.85 & 0.88 & 0.86 & \\
+FC Barcelona & 0.83 & 0.90 & 0.86 & \\
+Newcastle United & 0.97 & 0.77 & 0.86 & \\
+Real Madrid & 0.85 & 0.87 & 0.86 & \\
+Everton & 0.99 & 0.74 & 0.85 & \\
+FC Porto & 0.93 & 0.78 & 0.85 & \\
+Liverpool & 0.80 & 0.90 & 0.85 &  \\
+Manchester United & 0.78 & 0.90 & 0.84 &  \\
+Benfica & 0.77 & 0.90 & 0.83 & \\
+Internazionale & 0.94 & 0.75 & 0.83 & \\
+Borussia Dortmund & 0.95 & 0.70 & 0.80 & \\
+Leeds United & 0.98 & 0.68 & 0.80 & \\
+Aston Villa & 0.98 & 0.65 & 0.78 & \\
+West Ham United & 0.98 & 0.62 & 0.76 & \\
+Southampton & 1.00 & 0.58 & 0.74 & \\
+Sporting Clube de Portugal & 0.90 & 0.52 & 0.66 & \\
