@@ -15,10 +15,11 @@ def get_items_in_directory(filetype,directory):
     return [f for f in listdir(directory) if isfile(join(directory,f))]
 
 def count_words(data):
+    """Returns word count of a user"""
     word_count = 0
-    for comment in data:
-        comment = comment.split()
-        word_count += len(comment)
+    for words in data:
+        words = words.split()
+        word_count += len(words)
     return word_count
 
 def print_analysis(analysis_dict):
@@ -38,6 +39,9 @@ def print_analysis(analysis_dict):
 
 
 def analysis():
+    """Counts the amount of words per user, deletes user if he/she has less than
+    2000 words written in total. Deletes teams that have less than 50 users
+    left after this selection."""
     teams = get_items_in_directory('directory','data/')
     users_after_filters = defaultdict(list)
     analysis_dict = {}
@@ -67,6 +71,7 @@ def analysis():
 
 
 def write_to_directory(item,items):
+    """Writes text of the users to the correct directory"""
     for type in items:
         outpath = getcwd() + '/' + type + '/' + item
         makedirs(outpath)
@@ -74,6 +79,7 @@ def write_to_directory(item,items):
             copy2('data/' + item + '/' + file, type + '/' + item)
 
 def split_train_test_dev(users_after_filters):
+    """Splits the amount of users in 80% training, 10% dev and 10% test data"""
     for item in users_after_filters:
         amount_of_authors = len(users_after_filters[item])
         train = users_after_filters[item][:int(0.8*amount_of_authors)]
@@ -83,6 +89,6 @@ def split_train_test_dev(users_after_filters):
 
 def main():
     users_after_filters = analysis()
-    #split_train_test_dev(users_after_filters)
+    split_train_test_dev(users_after_filters)
 if __name__ == "__main__":
     main()

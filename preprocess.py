@@ -14,6 +14,7 @@ def removeURL(comment):
     return re.sub(r'http\S+', '', comment)
 
 def preprocess():
+    """Removes punctuation and concatenates all comments into one big list of words"""
     teams = get_items_in_directory('directory','data/')
     for team in teams:
         if team not in ['Argentina','Australia','Belgium','Brazil','Colombia',

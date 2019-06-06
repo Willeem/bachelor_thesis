@@ -5,7 +5,7 @@ from sklearn.svm import SVC, LinearSVC, NuSVC
 from sklearn.naive_bayes import *
 from sklearn.pipeline import Pipeline, FeatureUnion
 from sklearn.preprocessing import FunctionTransformer
-from sklearn.metrics import accuracy_score, classification_report, f1_score
+from sklearn.metrics import accuracy_score, classification_report, f1_score, make_scorer
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import cross_val_score
 from os import listdir, makedirs, getcwd
@@ -28,6 +28,9 @@ def get_items_in_directory(filetype,directory):
     return [f for f in listdir(directory) if isfile(join(directory,f))]
 
 def get_features(types):
+    """Retrieves files in a given folder, adds them to a dictionary for
+    retrieving the highest information words and returns that along the
+    features and the class labels."""
     output_labels = []
     features = []
     words = defaultdict(list)
@@ -46,12 +49,14 @@ def get_features(types):
                     features.append(feats)
                     output_labels.append(team)
                 count += 1
-                if count == 5:
-                    break
+                #if count == 5:
+                    #break
     return features,output_labels, words
 
 
 def filter_high_info_and_stop_words(comments,labels,all_word_scores,n):
+    """Returns the filtered output documents and labels after removing stop words
+    and making sure the words are in the top N words per class."""
     high_info_words = set()
     for label in all_word_scores:
         for word_scores in all_word_scores[label]:
@@ -73,9 +78,11 @@ def filter_high_info_and_stop_words(comments,labels,all_word_scores,n):
     return output_documents, output_labels
 
 def identity(x):
+    """Dummy function for the SKLearn Vectorizers"""
     return x
 
 def high_information_words(labelled_words, score_fn=BigramAssocMeasures.chi_sq):
+    """Calculates the chi-square score for every word per class."""
     word_fd = FreqDist()
     label_word_fd = ConditionalFreqDist()
 
@@ -99,6 +106,7 @@ def high_information_words(labelled_words, score_fn=BigramAssocMeasures.chi_sq):
 
 
 def high_information(comments,labels,words):
+    """Returns the chi square score for every word per class."""
     labels_set = set(labels)
     sorted_labels = sorted(labels_set)
     #all_words = [word for comment in comments for word in comment]
@@ -109,71 +117,63 @@ def high_information(comments,labels,words):
     return word_scores
 
 def ngramsplitter(x):
+    """Splits a string. This is used to combine unigrams and character N-grams"""
     return x.split()
 
-def get_pos_tags(file):
-    objs = []
-    f = open(file,'rb')
-    while 1:
-        try:
-            objs.append(pickle.load(f))
-        except EOFError:
-            break
-    objs = [i for obj in objs for item in obj for i in item]
-    return objs
+originalclass = []
+predictedclass = []
+def classification_report_with_accuracy_score(y_true, y_pred):
+    """Makes an average classification report for k-fold cross validation. Took this function from
+    https://stackoverflow.com/questions/42562146/classification-report-with-nested-cross-validation-in-sklearn/42567557"""
+    originalclass.extend(y_true)
+    predictedclass.extend(y_pred)
+    return accuracy_score(y_true, y_pred) # return accuracy score
+
 
 def main():
     startTime = datetime.now()
-    Xtrain, Ytrain, words = get_features(['train'])
-    Xtest, Ytest, words_not_used = get_features(['dev'])
-
-    Xtrain = get_pos_tags('pos_tags_train.pickle')
-    Xtest = get_pos_tags('pos_tags_dev.pickle')
-
+    Xtrain, Ytrain, words = get_features(['train','dev'])
+    Xtest, Ytest, words_not_used = get_features(['test'])
 
     print('read')
-    # word_scores = high_information(Xtrain,Ytrain,words)
+    word_scores = high_information(Xtrain,Ytrain,words)
     #for n in [10,50,100,500,1000,5000,10000]:
-    # n = 100
-    # HIXtrain, HIYtrain = filter_high_info_and_stop_words(Xtrain,Ytrain,word_scores,n)
-    # for item in HIXtrain:
-    #     Xtrain.append(item)
-    # for item in HIYtrain:
-    #     Ytrain.append(item)
+    n = 100
+    HIXtrain, HIYtrain = filter_high_info_and_stop_words(Xtrain,Ytrain,word_scores,n)
     #Xtrain = [str(x) for x in Xtrain]
     #Xtest = [str(x) for x in Xtest]
     tfidf = TfidfVectorizer(preprocessor=identity,tokenizer=identity)
-
-    for i in [(2,2),(3,3),(4,4),(5,5)]:
-        cvt = CountVectorizer(preprocessor=identity,tokenizer=identity,analyzer='char_wb',ngram_range=i)
-        tfidf = TfidfVectorizer(preprocessor=identity,tokenizer=identity)#,analyzer='char_wb',ngram_range=i)
-        tfidfngram = TfidfVectorizer(preprocessor=identity,tokenizer=identity,analyzer='char_wb',ngram_range=i)
-        for combination in [(cvt,MultinomialNB()),(tfidfngram,MultinomialNB()),(cvt,LogisticRegression(multi_class='ovr')),(tfidfngram,LogisticRegression(multi_class='ovr'))]:
-            vec = combination[0]
-            clf = combination[1]
-            #clf = LinearSVC()
-            #vec = tfidf5grams
-            #clf = LinearSVC()
-            #clf = LogisticRegression(multi_class='ovr')
-            #classifier = Pipeline([('vec',vec),('clf',clf)])
-            #for i in [(2,2),(3,3),(4,4),(5,5)]:
-            classifier = Pipeline([
-            ('features', FeatureUnion([
-                ('text', Pipeline([
-                    ('vec',tfidf),
-                ])),
-                ('ngrams', Pipeline([
-                    ('ngram',vec)
-                ])),
-                #('length', Pipeline([
-                #    ('count',FunctionTransformer(get_word_length,validate=False))
-                #])),
-            ])),
-            ('clf',clf)])
-            classifier.fit(Xtrain,Ytrain)
-            Yguess = classifier.predict(Xtest)
-            print("i: {} Accuracy:{}".format(i,accuracy_score(Ytest,Yguess)))
-            #print(classification_report(Ytest,Yguess))
+    #cvt = CountVectorizer(preprocessor=identity,tokenizer=ngramsplitter)
+    #for i in [(2,2),(3,3),(4,4),(5,5)]:
+    #cvtngram = CountVectorizer(preprocessor=identity,tokenizer=identity,analyzer='char_wb',ngram_range=i)
+    #tfidfngram = TfidfVectorizer(preprocessor=identity,tokenizer=identity,analyzer='char_wb',ngram_range=(5,5))
+    #for combination in [(cvtngram,MultinomialNB()),(tfidfngram,MultinomialNB()),(cvtngram,LogisticRegression(multi_class='ovr')),(tfidfngram,LogisticRegression(multi_class='ovr'))]:
+    vec = tfidf
+    clf = LinearSVC()
+    classifier = Pipeline([('vec',vec),('clf',clf)])
+    # classifier = Pipeline([
+    # ('features', FeatureUnion([
+    #     ('text', Pipeline([
+    #         ('vec',cvt),
+    #     ])),
+    #     ('ngrams', Pipeline([
+    #         ('ngram',vec)
+    #     ])),
+    #     #('length', Pipeline([
+    #     #    ('count',FunctionTransformer(get_word_length,validate=False))
+    #     #])),
+    # ])),
+    # ('clf',clf)])
+    if 'Xtest' in locals():
+        """If the variable Xtest is set, run this"""
+        classifier.fit(Xtrain,Ytrain)
+        Yguess = classifier.predict(Xtest)
+        print("Accuracy:{}".format(accuracy_score(Ytest,Yguess)))
+        print(classification_report(Ytest,Yguess))
+    else:
+        scores = cross_val_score(classifier, Xtrain, Ytrain, cv=10, scoring=make_scorer(classification_report_with_accuracy_score))
+        print("Accuracy:{}".format(accuracy_score(originalclass,predictedclass)))
+        print(classification_report(originalclass,predictedclass))
     print("Runtime: {} seconds.".format(datetime.now()-startTime))
 if __name__ == "__main__":
     main()
