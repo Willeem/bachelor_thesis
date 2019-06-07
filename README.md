@@ -1,6 +1,11 @@
 # Predicting the favourite football team of a Reddit user
 A repository for the bachelor thesis of Willem Datema s2958058
 
+To do the same experiment as I did, please clone this repository on your local machine by running
+
+```
+git clone https://github.com/Willeem/bachelor_thesis.git
+```
 
 
 ## Packages needed
@@ -10,8 +15,20 @@ To make sure you have every package needed, create a new virtual environment, ac
 pip install -r requirements.txt
 ```
 ## Getting the data
-To run the same experiment that I did, the steps for collecting the data can be skipped.
-### Aquiring user names
+### Pre-scraped data
+To run the same experiment that I did, the steps for collecting the data are the following:
+
+Download the data.tar.gz file from https://drive.google.com/open?id=1DBLTkHfy-sOJcO6XUB28HYkYBcxMdoap
+
+Go to the bachelor_thesis folder and extract the .tar.gz file by running the following command:
+
+```
+tar -zxvf /path/to/data.tar.gz
+```
+When this is done you can go to the step Preprocessing the data
+
+
+### New data: Aquiring user names
 Run the first script to gather usernames from the top 1000 posts of last month and all time.
 After running this script you will have a pickle file called final_dict.pickle, containing the clubs that are represented by at least 100 users or more as keys and the username of their fans as values. There will also be a pickle called authors.pickle which contains a list of all the authors. The last thing this script does is create folders for the teams in the data/ directory.
 The command for running this script is:
