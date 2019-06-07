@@ -166,12 +166,12 @@ def main():
     # ('clf',clf)])
     if 'Xtest' in locals():
         """If the variable Xtest is set, run this"""
-        classifier.fit(Xtrain,Ytrain)
+        classifier.fit(HIXtrain,HIYtrain)
         Yguess = classifier.predict(Xtest)
         print("Accuracy:{}".format(accuracy_score(Ytest,Yguess)))
         print(classification_report(Ytest,Yguess))
     else:
-        scores = cross_val_score(classifier, Xtrain, Ytrain, cv=10, scoring=make_scorer(classification_report_with_accuracy_score))
+        scores = cross_val_score(classifier, HIXtrain, HIYtrain, cv=10, scoring=make_scorer(classification_report_with_accuracy_score))
         print("Accuracy:{}".format(accuracy_score(originalclass,predictedclass)))
         print(classification_report(originalclass,predictedclass))
     print("Runtime: {} seconds.".format(datetime.now()-startTime))
