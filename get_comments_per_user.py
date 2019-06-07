@@ -5,10 +5,12 @@ import os
 import pickle
 import logging
 from datetime import datetime
+from decouple import config
 
-reddit = praw.Reddit(client_id=os.environ.get('CLIENT_ID'),
-                     client_secret=os.environ.get('CLIENT_SECRET'),
-                     user_agent=os.environ.get('USER_ID'))
+
+reddit = praw.Reddit(client_id=config('CLIENT_ID'),
+                     client_secret=config('CLIENT_SECRET'),
+                     user_agent=config('USER_ID'))
 
 formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
 

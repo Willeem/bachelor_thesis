@@ -6,9 +6,12 @@ from praw.models import MoreComments
 from collections import defaultdict
 from operator import itemgetter
 import os
-reddit = praw.Reddit(client_id=os.environ.get('CLIENT_ID'),
-                     client_secret=os.environ.get('CLIENT_SECRET'),
-                     user_agent=os.environ.get('USER_ID'))
+from decouple import config
+
+
+reddit = praw.Reddit(client_id=config('CLIENT_ID'),
+                     client_secret=config('CLIENT_SECRET'),
+                     user_agent=config('USER_ID'))
 
 def get_top_1000(authors,timefilter):
     """Retrieves the top 1000 posts of the soccer subreddit from a given timefilter """
